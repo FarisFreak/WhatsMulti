@@ -13,20 +13,23 @@ import CustomTab from './components/CustomTab';
 let isDark = true;
 
 const loadTheme = async () => {
-    isDark = await (window as any).api.theme();
+    isDark = await (window as any).api.themeShouldUseDarkColors();
+    // isDark = await (window as any).api.theme();
 }
   
 loadTheme()
 
 const App = () => {
     const [isEditing, setIsEditing] = useState(false);
-    const [tabs, setTabs] = useState<TabProperties[]>([
-        { id: "abc", title: "tab 1", active: true },
-        { id: "abcd", title: "tab 2" },
-        { id: "abcde", title: "tab 3" },
-    ]);
+    const [tabs, setTabs] = useState<TabProperties[]>((window as any).electron.tabs.get());
+    // const [tabs, setTabs] = useState<TabProperties[]>([
+    //     { id: "abc", title: "tab 1", active: true },
+    //     { id: "abcd", title: "tab 2" },
+    //     { id: "abcde", title: "tab 3" },
+    // ]);
     
     const [activeTab, setActiveTab] = useState('');
+    const [isDarkTheme, setDarkTheme] = useState(isDark);
 
     // React.useEffect(() => {
     //     //Handle for add custom button for rendered element
@@ -54,15 +57,25 @@ const App = () => {
             // console.log(error);
             setActiveTab('');
         }
+
+        (window as any).electron.tabs.set(tabs);
+        // console.log(tabs);
         
     }, [tabs])
+
+    useEffect(() => {
+        (window as any).api.onNativeThemeChanged(() => {
+            loadTheme();
+            setDarkTheme(isDark);
+        });
+    }, []);
 
     const addTab = () => {
         setTabs(prevTabs => [
             ...prevTabs,
             {
                 id: `tab-id-${crypto.randomUUID()}`,
-                title: `New Tabs`,
+                title: `New Tab`,
                 // favicon: tabs.length % 2 ? fb : google,
             },
         ]);
@@ -144,7 +157,7 @@ const App = () => {
     return (
         <>
             <div className='relative'>
-                <div className={cn('fixed', 'w-full', 'titlebar', isDark ? 'dark' : 'light')}>
+                <div className={cn('fixed', 'w-full', 'titlebar', isDarkTheme ? 'dark' : 'light')}>
                     <div  
                         style={{
                             width: "calc(100% - 165px)"
@@ -152,7 +165,7 @@ const App = () => {
                     >
                         <CustomTab event={addTab} />
                         <Tabs
-                            darkMode={isDark}
+                            darkMode={isDarkTheme}
                             onTabClose={close}
                             onTabReorder={reorder}
                             onTabActive={active}

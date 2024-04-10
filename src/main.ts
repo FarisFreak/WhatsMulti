@@ -1,11 +1,43 @@
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme } from 'electron';
 import path from 'path';
+import Store from 'electron-store';
+
+const store = new Store({
+  schema : {
+    tabs: {
+      type: 'array',
+    },
+    window: {
+      type: 'object',
+      properties: {
+        "size": {
+          type: 'object',
+          properties: {
+            "height": { type: 'number' },
+            "width": {type: 'number'},
+          }
+        },
+        "location": {
+          type: 'object',
+          properties: {
+            "x": { type: 'number' },
+            "y": { type: 'number' }
+          }
+        },
+        "maximized": {type: 'boolean'}
+
+      }
+    }
+  }
+});
+
+let isMaximized = false;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
-const isDark = nativeTheme.shouldUseDarkColors;
+let isDark = nativeTheme.shouldUseDarkColors;
 
 const theme = isDark ? {
   color: '#202124', // dark
@@ -46,6 +78,13 @@ const createWindow = () => {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
     mainWindow.removeMenu();
+  });
+
+  mainWindow.on('maximize', () => {
+    isMaximized = mainWindow.isMaximized();
+  });
+  mainWindow.on('unmaximize', () => {
+    isMaximized = mainWindow.isMaximized();
   });
 };
 
@@ -94,4 +133,34 @@ ipcMain.handle('msgbox', async (event) => {
     title: "Close Tab",
     message: "Are you sure you want to close the tab?",
   });
-})
+});
+
+ipcMain.on('electron-store-get', async (event) => {
+  event.returnValue = store.get("tabs");
+});
+
+ipcMain.on('electron-store-set', async (event, val) => {
+  store.set("tabs", val);
+});
+
+ipcMain.on("themeShouldUseDarkColors", (event) => {
+  isDark = nativeTheme.shouldUseDarkColors;
+  event.returnValue = nativeTheme.shouldUseDarkColors;
+});
+
+nativeTheme.addListener("updated", () => {
+  for (const browserWindow of BrowserWindow.getAllWindows()) {
+    browserWindow.webContents.send("nativeThemeChanged");
+    browserWindow.setTitleBarOverlay(isDark ? {
+      color: '#202124', // dark
+      symbolColor: '#CCCCCC', // dark
+    } : {
+      color: '#DEE1E6', // light
+      symbolColor: "#000000", // light
+    })
+  }
+});
+
+// ipcMain.on('electron-store-has', async (event, key, val) => {
+//   store.has(key);
+// });
