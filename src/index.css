@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.titlebar.light {
+  /* background-color: #FFFFFF; */
+  background-image: linear-gradient(0deg, #FFFFFF 4px, #DEE1E6 4px);
+}
+
+.titlebar.dark {
+  /* background-color: #323639; */
+  background-image: linear-gradient(0deg, #323639 4px, #202124 4px);
+}
+
+.chrome-tabs {
+  border-radius: 0;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+  padding-left: 35px;
+  /* max-width: calc(100% - 133px); */
+}
+
+.titlebar{
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+.chrome-tab {
+  -webkit-app-region: no-drag;
+}
+
+.main-container {
+  width: 100%;
+}
+
+.main-container.dark {
+  background-color: #323639;
+}
+
+.main-container.light {
+  background-color: #FFFFFF;
+}
+
+.wview {
+  overflow: hidden;
+  display: inline-flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  /* padding: 0 2px 0px 2px; */
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+.tab-panel {
+  /* display: none; */
+  width: 100%;
+  height: 100%;
+  /* background-color: green; */
+  padding: 0 4px 4px 4px;
+}
+
+.tab-panel.active {
+  display: block;
+}
+/* body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  margin: auto;
+  max-width: 38rem;
+  padding: 2rem;
+} */
+
+.add-button {
+  position: absolute;
+  /* height: 100%; */
+  -webkit-app-region: no-drag;
+  /* z-index: 1; */
+  /* left: 10px; */
+  left: 8px;
+  /* top: 8px; */
+  /* margin-top: 3px; */
+  padding: 3px;
+  border-radius: 20%;
+
+  top: 14px;
+  animation: add-button-animation 120ms forwards ease-in-out;
+  
+  transition: 0.2s;
+}
+
+.add-button:hover {
+  background: rgba(154,160,166,0.25);
+  /* transition: background 0.35s; */
+}
+
+.add-button svg {
+  filter: invert(27%) sepia(2%) saturate(1056%) hue-rotate(177deg) brightness(89%) contrast(87%);
+}
+
+.dark .add-button svg {
+  filter: invert(32%) sepia(0%) saturate(2207%) hue-rotate(214deg) brightness(92%) contrast(81%);
+}
+
+.dark .add-button:hover {
+  filter: invert(78%) sepia(23%) saturate(0%) hue-rotate(264deg) brightness(101%) contrast(85%);
+}
+
+.edit-tab {
+  position: absolute;
+  left: 36px;
+  width: calc(100% - 70px);
+  background: transparent;
+}
+
+.chrome-tabs-dark-theme .edit-tab {
+  color: #f1f3f4;
+}
+
+@-moz-keyframes add-button-animation {
+  to {
+    top: 8px;
+  }
+}
+@-webkit-keyframes add-button-animation {
+  to {
+    top: 8px;
+  }
+}
+@-o-keyframes add-button-animation {
+  to {
+    top: 8px;
+  }
+}
+@keyframes add-button-animation {
+  to {
+    top: 8px;
+  }
+}
