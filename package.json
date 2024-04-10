@@ -1,8 +1,8 @@
 {
-  "name": "electron_test_2",
-  "productName": "electron_test_2",
+  "name": "whatsmulti",
+  "productName": "whatsmulti",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Multi Whatsapp Desktop App",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
